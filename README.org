@@ -5,7 +5,7 @@
   Demonstrates how to provision the following resources in AWS with Terraform:
   - A VPC with a single subnet and an Internet gateway
   - An EC2 instance running Amazon Linux 2023 with SELinux disabled via kernel command-line parameters configured via instance user data
-  - An IAM role and associated instance profile that allows connections to the instance using Session Manager
+  - An IAM role and associated instance profile that allow connections to the instance using Session Manager
 * Prerequisites
   - An AWS account
   - Administrative privileges in the AWS account (e.g. access to an IAM user or role that has the AdministratorAccess AWS managed IAM policy attached)
