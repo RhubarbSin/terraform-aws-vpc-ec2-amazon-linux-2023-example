@@ -64,7 +64,9 @@
         Type =exit= to log out.
       - Log into the instance with Session Manager:
         #+begin_src shell
-        aws ssm start-session --target $(terraform output -raw instance_id)
+        aws ssm start-session \
+            --target $(terraform output -raw instance_id) \
+            --region $(terraform output -raw instance_region)
         #+end_src
         Type =exit= to log out.
   12. When finished, delete all of the resources by destroying the infrastructure.
