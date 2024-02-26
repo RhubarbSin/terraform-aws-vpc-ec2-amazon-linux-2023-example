@@ -1,0 +1,79 @@
+#+title: terraform-aws-vpc-ec2-amazon-linux-2023-example
+* What it is
+  A Terraform configuration for an AWS VPC and an EC2 instance running Amazon Linux 2023
+* What it does
+  Demonstrates how to provision the following resources in AWS with Terraform:
+  - A VPC with a single subnet and an Internet gateway
+  - An EC2 instance running Amazon Linux 2023 with SELinux disabled via kernel command-line parameters configured via instance user data
+  - An IAM role and associated instance profile that allows connections to the instance using Session Manager
+* Prerequisites
+  - An AWS account
+  - Administrative privileges in the AWS account (e.g. access to an IAM user or role that has the AdministratorAccess AWS managed IAM policy attached)
+  - The following software:
+    + Git
+    + Terraform (version 1.0 or later)
+    + SSH (=ssh= and =ssh-keygen= executables)
+    + AWS CLI configured with credentials for the aforementioned privileges
+* How to use it
+  The following instructions use AWS CloudShell, a browser-based shell that simplifies deployment by providing a predictable, reproducible environment.
+  1. Log into the AWS Management Console and launch CloudShell.
+  2. Install utilities for the yum package manager.
+     #+begin_src shell
+     sudo yum install -y yum-utils
+     #+end_src
+  3. Add the Terraform repository.
+     #+begin_src shell
+     sudo yum-config-manager \
+           --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+     #+end_src
+  4. Install the terraform package.
+     #+begin_src shell
+     sudo yum install -y terraform
+     #+end_src
+  5. Clone the repository.
+     #+begin_src shell
+     git clone https://github.com/RhubarbSin/terraform-aws-vpc-ec2-amazon-linux-2023-example.git
+     #+end_src
+  6. Change to the repository's directory.
+     #+begin_src shell
+     cd terraform-aws-vpc-ec2-amazon-linux-2023-example
+     #+end_src
+  7. Initialize the working directory.
+     #+begin_src shell
+     terraform init
+     #+end_src
+  8. Validate the configuration.
+     #+begin_src shell
+     terraform validate
+     #+end_src
+  9. Generate an execution plan to see what actions Terraform would take to apply the current configuration.
+     #+begin_src shell
+     terraform plan
+     #+end_src
+  10. Create the infrastructure.
+      #+begin_src shell
+      terraform apply -auto-approve
+      #+end_src
+  11. After a few minutes, the EC2 instance should be running and can be accessed via SSH or Session Manager.
+      - Log into the instance with SSH:
+        #+begin_src shell
+        ssh -o StrictHostKeyChecking=no \
+            -i $(terraform output -raw ssh_key_file_name) \
+            ec2-user@$(terraform output -raw instance_public_ip)
+        #+end_src
+        Type =exit= to log out.
+      - Log into the instance with Session Manager:
+        #+begin_src shell
+        aws ssm start-session --target $(terraform output -raw instance_id)
+        #+end_src
+        Type =exit= to log out.
+  12. When finished, delete all of the resources by destroying the infrastructure.
+      #+begin_src shell
+      terraform apply -destroy -auto-approve
+      #+end_src
+* Details
+  The resources deployed include the following:
+  - One VPC with an Internet gateway and inbound SSH access allowed on port 22 by the default security group
+  - One key pair to connect to the instance using SSH
+  - One IAM role that enables AWS Systems Manager service core functionality and associated instance profile
+  - One EC2 instance with an Elastic IP
