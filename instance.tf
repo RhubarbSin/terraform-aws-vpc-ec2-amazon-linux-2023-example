@@ -99,7 +99,7 @@ locals {
     runcmd : [
       "grubby --args selinux=0 --update-kernel ALL",
     ],
-    power_state = {
+    power_state : {
       mode : "reboot",
       timeout : 0,
       condition : true,
