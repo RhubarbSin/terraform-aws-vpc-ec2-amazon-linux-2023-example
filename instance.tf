@@ -1,6 +1,4 @@
 data "aws_ec2_instance_types" "this" {
-  count = var.instance_type == null ? 1 : 0
-
   filter {
     name   = "burstable-performance-supported"
     values = ["true"]
@@ -23,11 +21,7 @@ data "aws_ec2_instance_types" "this" {
 }
 
 data "aws_ec2_instance_type" "this" {
-  instance_type = (
-    var.instance_type == null ?
-    data.aws_ec2_instance_types.this.0.instance_types.0 :
-    var.instance_type
-  )
+  instance_type = coalesce(var.instance_type, data.aws_ec2_instance_types.this.instance_types.0)
 }
 
 data "aws_ssm_parameter" "this" {
