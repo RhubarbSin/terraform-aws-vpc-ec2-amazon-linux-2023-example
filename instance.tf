@@ -121,8 +121,6 @@ data "cloudinit_config" "this" {
   }
 }
 
-data "aws_default_tags" "this" {}
-
 resource "aws_instance" "this" {
   ami                         = data.aws_ssm_parameter.this.value
   iam_instance_profile        = aws_iam_role.this.name
@@ -130,7 +128,6 @@ resource "aws_instance" "this" {
   key_name                    = aws_key_pair.this.key_name
   subnet_id                   = aws_subnet.this.id
   vpc_security_group_ids      = [aws_vpc.this.default_security_group_id]
-  volume_tags                 = data.aws_default_tags.this.tags
   user_data                   = data.cloudinit_config.this.rendered
   user_data_replace_on_change = true
 
