@@ -12,23 +12,19 @@ resource "aws_default_security_group" "this" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "this" {
-  security_group_id = aws_vpc.this.default_security_group_id
+  security_group_id = aws_default_security_group.this.id
 
   cidr_ipv4   = "0.0.0.0/0"
   ip_protocol = -1
-
-  depends_on = [aws_default_security_group.this]
 }
 
 resource "aws_vpc_security_group_ingress_rule" "this" {
-  security_group_id = aws_vpc.this.default_security_group_id
+  security_group_id = aws_default_security_group.this.id
 
   cidr_ipv4   = "0.0.0.0/0"
   from_port   = 22
   to_port     = 22
   ip_protocol = "tcp"
-
-  depends_on = [aws_default_security_group.this]
 }
 
 resource "aws_default_route_table" "this" {
